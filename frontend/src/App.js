@@ -1,25 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
+import React, {useEffect, useState} from 'react';
 
-function App() {
+const App = (props) => {
+  const [player, setPlayer] = useState(null)
+
+  useEffect(() => {
+    const getData = async ()=>{
+      const response = await fetch('http://localhost:3000/getplayerstatsname', {
+        method: 'GET',
+        body: JSON.stringify({full_name: "Kevin Durant" }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const data = await response.json()
+      setPlayer(data) 
+    }
+    getData();
+  }, [setPlayer]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <div>
+      <h1>KD Stats</h1>
+      <h2>{player.pts} points per game</h2>
+      <h2>{player.ast} assists per game</h2>
+      <h2>{player.reb} rebounds per game</h2>
+      <h2>{parseInt(100*player.fgp)}% from the field</h2>
+      <h2>{parseInt(100*player.ftp)}% from the line</h2>
+      <h2>{parseInt(100*player.tpp)}% from deep</h2>
+    </div> 
+  )
 }
 
 export default App;
