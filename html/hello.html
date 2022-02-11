@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+function getPlayerStats() {
+	var url = new URL('http://localhost:3001/getplayerstatsname')
+	var playerName = document.getElementById('name').value
+	if(playerName == '' || playerName == null){ return }
+    var params = {name:`${playerName}`}
+  	Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+	fetch(url,
+		{headers: {
+		  'Accept': 'application/json',
+		  'Content-Type': 'application/json'
+		},
+		method: 'GET',
+	  })
+	.then(response => response.json())
+	.then(data =>{
+		var name = data['full_name']
+		var pts = data['pts']
+		var reb = data['reb']
+		var ast = data['ast']
+		var team = data['team_abbr']
+		document.getElementById('stext').innerHTML = `${name}'s stats:<br> ${pts} points per game<br> ${ast} assists per game<br> ${reb} rebounds per game<br>For ${team}`
+	})
+}
+</script>
+</head>
+<body>
+<h1>Player Stats</h1>
+
+
+<form action='javascript:getPlayerStats()'>
+	<label for='name'>Player name:</label><br>
+	<input type='text' id='name' name='name' value = ''><br><br>
+	<input type='submit' value = 'get player stats'>
+</form>
+
+<p id="stext">push the button!</p>
+
+</body>
+</html>
